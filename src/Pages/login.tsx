@@ -11,30 +11,38 @@ const Login = () => {
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:5282/api/Auth", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-                Username: name,
-                password
-            })
-        })
+        try {
+            const response = await fetch("http://localhost:5282/api/Auth", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    Username: name,
+                    password
+                })
+            });
+    
+            if (response.ok) {
+                const Id = await fetch(`http://localhost:5282/api/User/GetId?userName=${name}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                const data = await response.text();
+                const UserId = await Id.text();
+                localStorage.setItem("jwtToken", data);
+                localStorage.setItem("UserId", UserId);
+                navigate("/");
+            } else {
+                // Giriş başarısız, hata mesajı gösterebilirsiniz.
+            }
+        } catch (error) {
+            console.error("Giriş sırasında bir hata oluştu: ", error);
+        }
         
         const Id = await fetch(`http://localhost:5282/api/User/GetId?userName=${name}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         })
-        
-        
-        
-        const data = await response.text(); 
-        const UserId = await Id.text();
-        console.log(UserId)
-        localStorage.setItem("jwtToken", data);
-        localStorage.setItem("UserId", UserId);
-        return  navigate("/")
-
     }
     return (
 

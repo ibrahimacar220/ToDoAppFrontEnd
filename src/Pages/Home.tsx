@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import {Navigate, useNavigate } from "react-router-dom";
+
 
 const Home = () => {
+    const navigate = useNavigate();
     const [tasks, setTasks] = useState<any[]>([]);
     const [taskss, setTaskss] = useState([]);
     const [newTask, setNewTask] = useState("");
@@ -81,6 +84,8 @@ const Home = () => {
     }
 
     useEffect(() => {
+        if (storedToken == null) {
+           return navigate("/login")}
         (
             async () => {
                 const response = await fetch(`http://localhost:5282/api/ToDo/GetTodoListByUserId?id=${UserId}`, {
