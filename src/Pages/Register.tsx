@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useState } from "react";
 import {Navigate, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
 
 const Register = () => {
     const [name, setName] = useState('')
@@ -12,7 +13,10 @@ const Register = () => {
         e.preventDefault();
 
         if (!name || !password) {
-            console.error("Kullanıcı adı ve şifre gereklidir.");
+            toast.error('lütfen kullanici adi ve sifre alanlarini doldurun', {
+                position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
+                autoClose: 1000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
+              });
             return;
         }
 
@@ -26,8 +30,6 @@ const Register = () => {
             })
         })
 
-       
-       
         return  navigate("/login")
     }
 

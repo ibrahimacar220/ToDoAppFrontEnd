@@ -1,12 +1,12 @@
 import React, { useEffect, SyntheticEvent, useState } from 'react';
 import { Navigate, useNavigate } from "react-router-dom";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate();
-
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -21,22 +21,40 @@ const Login = () => {
                     password
                 })
             });
-    
-            if (response.ok) {
-                const Id = await fetch(`http://localhost:5282/api/User/GetId?userName=${name}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                })
-                const data = await response.text();
-                const UserId = await Id.text();
-                localStorage.setItem("jwtToken", data);
-                localStorage.setItem("UserId", UserId);
-                navigate("/");
-            } else {
-                // Giriş başarısız, hata mesajı gösterebilirsiniz.
+            console.log(response)
+            try {
+                if (response.ok) {
+                    const IdResponse = await fetch(`http://localhost:5282/api/User/GetId?userName=${name}`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+            
+                    const IdData = await IdResponse.json(); // Yanıtı JSON olarak çözümle
+            
+                    if (IdData.isSuccess) {
+                        // Başarılı giriş
+                        const data = await response.text();
+                        localStorage.setItem("jwtToken", data);
+                        localStorage.setItem("UserId", String(IdData.returnedId));
+                        navigate("/");
+                        toast.success('başariyla giriş yaptiniz.', {
+                            position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
+                            autoClose: 3000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
+                          });
+                    } else {
+                         toast.error(IdData.message,{
+                            position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
+                            autoClose: 3000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
+                         });
+                    }
+                } else {
+                    toast.error(await response.text());
+                }
+            } catch (error) {
+                console.error("Giriş sirasinda bir hata oluştu: ", error);
             }
         } catch (error) {
-            console.error("Giriş sırasında bir hata oluştu: ", error);
+            console.error("Giriş sirasinda bir hata oluştu: ", error);
         }
         
         const Id = await fetch(`http://localhost:5282/api/User/GetId?userName=${name}`, {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {Navigate, useNavigate } from "react-router-dom";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -46,7 +47,10 @@ const Home = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    // Başarılı yanıt
+                    toast.error('Task Silindi.', {
+                        position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
+                        autoClose: 1000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
+                      });
                     return response.json();
                 } else {
                     // Hata durumu
@@ -54,7 +58,7 @@ const Home = () => {
                 }
             })
             .then(data => {
-                // Silme işlemi başarıyla tamamlandı
+                
                 console.log(data);
             })
             .catch(error => {

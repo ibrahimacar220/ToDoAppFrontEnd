@@ -1,12 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
 
 const Nav = () => {
     const handleLogout = () => {
         // Local storage'daki tüm verileri temizle
-        localStorage.clear();
-
-        window.location.href = "/Login"; 
+        toast.success('basariyla cikis yapildi!!', {
+            position: 'top-center', 
+            autoClose: 1000,
+          });
+          setTimeout(() => {
+            localStorage.clear();
+            window.location.href = "/Login";
+          }, 1000);
     };
 
     return (
