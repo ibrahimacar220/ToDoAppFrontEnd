@@ -6,9 +6,7 @@ const Nav = () => {
         // Local storage'daki tüm verileri temizle
         localStorage.clear();
 
-        // Kullanıcıyı çıkış sayfasına yönlendir
-        // Örnek olarak anasayfaya yönlendiriyoruz
-        window.location.href = "/Login"; // veya istediğiniz bir başka sayfaya yönlendirebilirsiniz
+        window.location.href = "/Login"; 
     };
 
     return (
