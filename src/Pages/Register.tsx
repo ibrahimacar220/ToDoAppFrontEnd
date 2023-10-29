@@ -11,15 +11,9 @@ const Register = () => {
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
-
-        if (!name || !password) {
-            toast.error('lütfen kullanici adi ve sifre alanlarini doldurun', {
-                position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
-                autoClose: 1000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
-              });
-            return;
-        }
-
+           
+        console.log(name,password)
+       
        const userId =  await fetch("http://localhost:5282/api/User/Save", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -27,10 +21,24 @@ const Register = () => {
                 id,
                 Username:name,
                 password
-            })
+            })  
         })
-
-        return  navigate("/login")
+        
+        const IdData = await userId.json(); // Yanıtı JSON olarak çözümle
+            
+        if (IdData.isSuccess) {
+            // Başarılı giriş
+            navigate("/login")
+            toast.success('Başariyla Hesap Oluşturdunuz..', {
+                position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
+                autoClose: 3000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
+              });
+        } else {
+             toast.error(IdData.message,{
+                position: 'top-center', // Bildirimin pozisyonunu ayarlayabilirsiniz
+                autoClose: 3000, // Bildirimin otomatik kapanma süresini belirleyebilirsiniz (ms cinsinden)
+             });
+        }
     }
 
     return (
